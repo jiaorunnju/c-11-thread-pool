@@ -5,6 +5,7 @@
 using namespace std;
 
 int main() {
+	/*
 	auto task1 = packaged_task<int()>([] {std::this_thread::sleep_for(std::chrono::seconds(1)); return 1; });
 	auto task2 = packaged_task<int()>([] {std::this_thread::sleep_for(std::chrono::seconds(1)); return 2; });
 	auto task3 = packaged_task<int()>([] {std::this_thread::sleep_for(std::chrono::seconds(1)); return 3; });
@@ -30,15 +31,10 @@ int main() {
 	cout << f4.get() << endl;
 	cout << f5.get() << endl;
 	cout << f6.get() << endl;
-	system("pause");
-
-	/*
-	int i = 3;
-	SyncQueue<int> q(1);
-	q.add(3);
-	cout << q.getOne(i) << endl;
-	q.stop();
-	cout << q.getOne(i) << endl;
-	system("pause");
 	*/
+
+	ThreadPool<int()> pool(2);
+	auto f = pool.async([] {return 3; });
+	cout << f.get() << endl;
+	system("pause");
 }

@@ -34,16 +34,13 @@ public:
 
 	bool getOne(T& t) {
 		unique_lock<mutex> locker(m_mutex);
-		//????? why when I use wait here, it does not work, just wait.
 		while (!isStop() && empty()) {
-			m_notEmpty.wait_for(locker,std::chrono::milliseconds(500));
+			m_notEmpty.wait_for(locker,std::chrono::milliseconds(1000));
 		}
-		//m_notEmpty.wait(locker, [this] {return isStop() || !empty(); });
 		if (isStop()) {
 			return false;
 		}
-		t = std::move(m_queue.front());
-		//cout << "removing " << t << endl;
+		t = std::move(m_queue.front())
 		m_queue.pop_front();
 		m_notFull.notify_one();
 		return true;
@@ -64,7 +61,6 @@ public:
 		while (!isStop() && full()) {
 			m_notFull.wait(locker);
 		}
-		//m_notFull.wait(locker, [this] {return isStop() || !full(); });
 		if (isStop()) {
 			return;
 		}

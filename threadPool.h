@@ -15,6 +15,7 @@ using std::thread;
 using std::unique_ptr;
 using std::future;
 using std::packaged_task;
+using std::function;
 
 const int MaxTaskCount = 10;
 
@@ -46,6 +47,13 @@ public:
 	void stop() {
 		std::call_once(m_flag, [this] {stopThreadGroup(); });
 	}
+	
+	auto async(function<T> f)-> decltype(declval<Task>().get_future()) {
+		Task task(f);
+		auto fut = task.get_future();
+		this->addTask(std::move(task));
+		return std::move(fut);
+	}
 
 private:
 	void runInThread() {
@@ -66,11 +74,9 @@ private:
 	}
 
 	void stopThreadGroup() {
-		m_queue.stop();
-		//cout << m_queue.isStop() << endl;
+		m_queue.stop()
 		m_running = false;
 		for (auto& t : m_threadGroup) {
-			//cout << __FUNCTION__ << endl;
 			if(t->joinable())
 				t->join();
 		}
