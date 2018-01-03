@@ -35,12 +35,12 @@ public:
 	bool getOne(T& t) {
 		unique_lock<mutex> locker(m_mutex);
 		while (!isStop() && empty()) {
-			m_notEmpty.wait_for(locker,std::chrono::milliseconds(1000));
+			m_notEmpty.wait(locker);
 		}
 		if (isStop()) {
 			return false;
 		}
-		t = std::move(m_queue.front())
+		t = std::move(m_queue.front());
 		m_queue.pop_front();
 		m_notFull.notify_one();
 		return true;
@@ -48,6 +48,7 @@ public:
 
 	void stop() {
 		m_stop = true;
+		m_notEmpty.notify_all();
 	}
 
 	size_t size() {
@@ -62,6 +63,7 @@ public:
 			m_notFull.wait(locker);
 		}
 		if (isStop()) {
+			m_notEmpty.notify_all();
 			return;
 		}
 		m_queue.push_back(std::forward<F>(f));

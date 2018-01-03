@@ -7,5 +7,6 @@ I implement a sync queue and a thread pool here. The users just put packaged_tas
 For detail usage, see the main.cpp.
 
 ## Attention
-use -std=c++11 if you use old versions of compiler.
-This is just for learning :)  I just write it for practice. 
+use -std=c++11 or higher standard if you use old versions of compiler.
+This is just for learning :)  
+I just write it for practice. 

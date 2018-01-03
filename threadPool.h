@@ -74,7 +74,7 @@ private:
 	}
 
 	void stopThreadGroup() {
-		m_queue.stop()
+		m_queue.stop();
 		m_running = false;
 		for (auto& t : m_threadGroup) {
 			if(t->joinable())
