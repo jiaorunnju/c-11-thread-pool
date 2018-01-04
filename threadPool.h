@@ -19,7 +19,7 @@ using std::function;
 
 const int MaxTaskCount = 10;
 
-template <typename T>
+template <typename T, typename = std::enable_if<std::is_function<T>::value>::type>
 class ThreadPool {
 	using Task = packaged_task<T>;
 	list<unique_ptr<thread>> m_threadGroup;
